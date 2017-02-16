@@ -5,6 +5,7 @@ set(LIC_SOURCES
 	format/ClrMetadataFormat.cpp
 	loader/Assembly.cpp
 	loader/AssemblyLoader.cpp
+	loader/TypeDefinition.cpp
 )
 
 add_executable(lic ${LIC_SOURCES})

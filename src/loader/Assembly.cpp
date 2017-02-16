@@ -56,8 +56,6 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
     // Assume the 2 byte variant for each key (if there are too many records, an error will be raised later)
     this->metadataRowSizes = RowDefaultSizes;
 
-    array<uint32_t, CLI_METADATA_TABLES_COUNT> rowCounts;
-
     uint64_t tablePresentMask = *reinterpret_cast<uint64_t*>(metadataStreamHeaderPos + CLI_METADATA_STREAM_HEADER_VALID_TABLES_OFFSET);
     uint32_t* rowCountIt = reinterpret_cast<uint32_t*>(metadataStreamHeaderPos + CLI_METADATA_STREAM_HEADER_ROW_COUNTS_OFFSET);
 
@@ -65,13 +63,13 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
     {
         if (tablePresentMask & ((uint64_t)1 << i))
         {
-            rowCounts[i] = *(rowCountIt++);
+            this->metadataRowCounts[i] = *(rowCountIt++);
 
-            if (rowCounts[i] > CLI_RID_SIZE_TRESHOLD)
+            if (this->metadataRowCounts[i] > CLI_RID_SIZE_TRESHOLD)
             {
                 throw exception("Tables indexed by 4 bytes not supported");
             }
-            else if (rowCounts[i] == 0)
+            else if (this->metadataRowCounts[i] == 0)
             {
                 throw exception("Invalid zero size of table");
             }
@@ -82,7 +80,7 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
         }
         else
         {
-            rowCounts[i] = 0;
+            this->metadataRowCounts[i] = 0;
         }
     }
 
@@ -91,9 +89,9 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
 
     for (size_t i = 0; i < CLI_METADATA_TABLES_COUNT; i++)
     {
-        if (rowCounts[i] > 0)
+        if (this->metadataRowCounts[i] > 0)
         {
-            size_t tableLen = rowCounts[i] * this->metadataRowSizes[i];
+            size_t tableLen = this->metadataRowCounts[i] * this->metadataRowSizes[i];
             this->metadataTables[i] = make_span(currentTablePos, tableLen);
 
             currentTablePos += tableLen;
@@ -113,4 +111,20 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
 
 lic::Assembly::~Assembly()
 {
+}
+
+const gsl::span<lic::TypeDefinition> lic::Assembly::Types()
+{
+    if (this->types.empty())
+    {
+        size_t rowSize = this->metadataRowSizes[(size_t)MetadataTable::TypeDef];
+        auto table = this->metadataTables[(size_t)MetadataTable::TypeDef];
+        
+        for (auto tableIt = table.begin(); tableIt < table.end(); tableIt += rowSize)
+        {
+            this->types.emplace_back((Assembly&)*this, &*tableIt);
+        }
+    }
+
+    return make_span(this->types);
 }

@@ -1,6 +1,7 @@
 #ifndef LIC_ASSEMBLY
 #define LIC_ASSEMBLY
 
+#include <vector>
 #include <gsl/gsl>
 
 #include "TypeDefinition.h"
@@ -27,7 +28,7 @@ public:
 
 private:
     friend class AssemblyLoader;
-
+    friend class TypeDefinition;
 
     size_t baseRva;
     std::unique_ptr<gsl::byte[]> data;
@@ -39,7 +40,10 @@ private:
     gsl::span<gsl::byte> blobStream;
 
     std::array<size_t, MetadataTablesCount> metadataRowSizes;
+    std::array<size_t, MetadataTablesCount> metadataRowCounts;
     std::array<gsl::span<gsl::byte>, MetadataTablesCount> metadataTables;
+
+    std::vector<TypeDefinition> types;
 };
 
 }
