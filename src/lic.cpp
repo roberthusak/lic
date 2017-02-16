@@ -1,14 +1,15 @@
 #include <iostream>
 
-#include "loader\AssemblyLoader.h"
+#include "loader/AssemblyLoader.h"
 
 using namespace std;
 using namespace lic;
 
-int main (int argc, char* argv[])
+int main(int argc, char* argv[])
 {
-	// TODO: Find the path automatically and independently of the absolute location
-	DumpBinaryFile("C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.4\\Basic.dll", cout);
+    // TODO: Find the path automatically and independently of the absolute location
+    AssemblyLoader loader;
+    auto& assembly = loader.LoadAssembly("C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.4\\Basic.dll");
 
-	return 0;
+    return 0;
 }

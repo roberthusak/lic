@@ -1,0 +1,38 @@
+#ifndef LIC_CLR_METADATA_FORMAT
+#define LIC_CLR_METADATA_FORMAT
+
+#include <array>
+
+#define CLI_USUAL_HEADER_SIZE 0x48
+#define CLI_HEADER_METADATA_RVA_OFFSET 0x10
+#define CLI_HEADER_METADATA_SIZE_OFFSET 0x14
+
+#define CLI_METADATA_HEADER_SIZE 0x20
+
+#define CLI_STREAM_HEADER_OFFSET_OFFSET 0x0
+#define CLI_STREAM_HEADER_SIZE_OFFSET 0x4
+#define CLI_STREAM_HEADER_NAME_OFFSET 0x8
+
+#define CLI_METADATA_STREAM_HEADER_HEAP_SIZES_OFFSET 0x6
+#define CLI_METADATA_STREAM_HEADER_VALID_TABLES_OFFSET 0x8
+#define CLI_METADATA_STREAM_HEADER_ROW_COUNTS_OFFSET 0x18
+
+#define CLI_METADATA_TABLES_COUNT 45
+
+// Defensive - at most 5 bits might be used to encode table in encoded token
+#define CLI_RID_SIZE_TRESHOLD 0x07FF
+
+namespace lic
+{
+
+enum class MetadataTable
+{
+    TypeDef = 0x2,
+    FieldDef = 0x4
+};
+
+extern const std::array<size_t, CLI_METADATA_TABLES_COUNT> RowDefaultSizes;
+
+}
+
+#endif // !LIC_CLR_METADATA_FORMAT
