@@ -5,6 +5,7 @@
 #include <gsl/gsl>
 
 #include "TypeDefinition.h"
+#include "MethodDefinition.h"
 
 namespace lic
 {
@@ -25,10 +26,12 @@ public:
     Assembly& operator=(const Assembly&) = delete;
 
     const gsl::span<TypeDefinition> Types();
+    const gsl::span<MethodDefinition> Methods();
 
 private:
     friend class AssemblyLoader;
     friend class TypeDefinition;
+    friend class MethodDefinition;
 
     size_t baseRva;
     std::unique_ptr<gsl::byte[]> data;
@@ -44,6 +47,7 @@ private:
     std::array<gsl::span<gsl::byte>, MetadataTablesCount> metadataTables;
 
     std::vector<TypeDefinition> types;
+    std::vector<MethodDefinition> methods;
 };
 
 }

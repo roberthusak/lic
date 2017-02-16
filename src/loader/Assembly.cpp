@@ -119,12 +119,32 @@ const gsl::span<lic::TypeDefinition> lic::Assembly::Types()
     {
         size_t rowSize = this->metadataRowSizes[(size_t)MetadataTable::TypeDef];
         auto table = this->metadataTables[(size_t)MetadataTable::TypeDef];
-        
+        size_t rid = 1;
+
         for (auto tableIt = table.begin(); tableIt < table.end(); tableIt += rowSize)
         {
-            this->types.emplace_back((Assembly&)*this, &*tableIt);
+            this->types.emplace_back((Assembly&)*this, MetadataTable::TypeDef, rid, &*tableIt);
+            rid++;
         }
     }
 
     return make_span(this->types);
+}
+
+const gsl::span<lic::MethodDefinition> lic::Assembly::Methods()
+{
+    if (this->methods.empty())
+    {
+        size_t rowSize = this->metadataRowSizes[(size_t)MetadataTable::MethodDef];
+        auto table = this->metadataTables[(size_t)MetadataTable::MethodDef];
+        size_t rid = 1;
+
+        for (auto tableIt = table.begin(); tableIt < table.end(); tableIt += rowSize)
+        {
+            this->methods.emplace_back((Assembly&)*this, MetadataTable::MethodDef, rid, &*tableIt);
+            rid++;
+        }
+    }
+
+    return make_span(this->methods);
 }

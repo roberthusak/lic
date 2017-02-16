@@ -5,6 +5,8 @@ set(LIC_SOURCES
 	format/ClrMetadataFormat.cpp
 	loader/Assembly.cpp
 	loader/AssemblyLoader.cpp
+	loader/Metadata.cpp
+	loader/MethodDefinition.cpp
 	loader/TypeDefinition.cpp
 )
 

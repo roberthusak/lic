@@ -13,7 +13,12 @@ int main(int argc, char* argv[])
 
     for (auto& type : assembly.Types())
     {
-        cout << type.Namespace() << '.' << type.Name() << endl;
+        cout << type.FirstMethodRid() << ' ' << type.Namespace() << '.' << type.Name() << endl;
+
+        for (auto& method : type.Methods())
+        {
+            cout << '\t' << method.Name() << "(...)" << endl;
+        }
     }
 
     return 0;
