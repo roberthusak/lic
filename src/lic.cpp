@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
         }
     }
 
+    cout << endl;
+
     // Find the selected type
     auto types = assembly.Types();
     auto typeIt = find_if(types.begin(), types.end(), [&typeName](auto& type) { return type.Name() == typeName; });

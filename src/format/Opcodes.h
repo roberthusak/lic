@@ -1,4 +1,5 @@
 #ifndef LIC_OPCODES
+#define LIC_OPCODES
 
 namespace lic
 {

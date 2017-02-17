@@ -1,8 +1,7 @@
 #ifndef LIC_INTERPRETER
 #define LIC_INTERPRETER
 
-#include <gsl/gsl>
-
+#include "CallStackFrame.h"
 #include "loader/AssemblyLoader.h"
 
 namespace lic
@@ -22,6 +21,7 @@ private:
     std::ostream& out;
 
     AssemblyLoader loader;
+    std::stack<CallStackFrame> callStack;
 };
 
 }
