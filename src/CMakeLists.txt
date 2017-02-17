@@ -12,6 +12,7 @@ set(LIC_SOURCES
 	loader/Metadata.cpp
 	loader/MethodDefinition.cpp
 	loader/TypeDefinition.cpp
+	types/NumberType.cpp
 	types/RuntimeType.cpp
 )
 
