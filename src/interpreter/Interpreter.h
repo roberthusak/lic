@@ -10,7 +10,7 @@ namespace lic
 class Interpreter
 {
 public:
-    Interpreter(const std::string& assembly, std::istream& in, std::ostream& out);
+    Interpreter(const std::string& assembly, std::istream& in, std::ostream& out, std::ostream& log);
 
     gsl::span<Assembly> Assemblies();
 
@@ -19,9 +19,17 @@ public:
 private:
     std::istream& in;
     std::ostream& out;
+    std::ostream& log;
 
     AssemblyLoader loader;
-    std::stack<CallStackFrame> callStack;
+    std::vector<CallStackFrame> callStack;
+    const gsl::byte* ip;
+
+    void AddCall(MethodDefinition& method, gsl::span<TypedValue> args, Opcode* returnAddress);
+    void PerformEvaluationLoop();
+
+    Opcode ReadOpcode();
+    LongOpcodeSuffix ReadOpcodeSuffix();
 };
 
 }

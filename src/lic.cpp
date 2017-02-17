@@ -11,9 +11,9 @@ int main(int argc, char* argv[])
     // TODO: Allow to pass as arguments
     string assemblyPath = "C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.4\\Basic.dll";
     string typeName = "Arithmetic";
-    string methodName = "AddTest";
+    string methodName = "AddSimple";
 
-    Interpreter interpreter(assemblyPath, cin, cout);
+    Interpreter interpreter(assemblyPath, cin, cout, cerr);
     auto& assembly = interpreter.Assemblies()[0];
 
     // Dump the contents of the assembly

@@ -15,6 +15,7 @@ public:
     ~MethodDefinition();
 
     const char* Name() const;
+    const gsl::byte* Code() const;
 };
 
 }

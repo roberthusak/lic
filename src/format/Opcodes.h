@@ -1,10 +1,20 @@
 #ifndef LIC_OPCODES
 #define LIC_OPCODES
 
+#include <gsl/gsl>
+
 namespace lic
 {
 
-enum class Opcode
+constexpr uint8_t MethodHeaderFormatMask = 0x3;
+
+enum class HeaderFormat : uint8_t
+{
+    Tiny = 0x2,
+    Fat = 0x3
+};
+
+enum class Opcode : uint8_t
 {
     Nop = 0x00,
     Break = 0x01,
@@ -198,7 +208,7 @@ enum class Opcode
     LongOpcodePrefix = 0xfe
 };
 
-enum class LongOpcodeSuffix
+enum class LongOpcodeSuffix: uint8_t
 {
     Arglist = 0x00,
     Ceq = 0x01,
