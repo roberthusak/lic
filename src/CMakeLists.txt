@@ -4,6 +4,7 @@ set(LIC_SOURCES
     lic.cpp
 	format/ClrMetadataFormat.cpp
 	format/Opcodes.cpp
+	interpreter/Interpreter.cpp
 	loader/Assembly.cpp
 	loader/AssemblyLoader.cpp
 	loader/Metadata.cpp

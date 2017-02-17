@@ -23,6 +23,8 @@ public:
     AssemblyLoader(const AssemblyLoader&) = delete;
     AssemblyLoader& operator=(const AssemblyLoader&) = delete;
 
+    gsl::span<Assembly> Assemblies();
+
     Assembly& LoadAssembly(const std::string& filepath);
 
 private:

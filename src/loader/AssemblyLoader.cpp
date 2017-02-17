@@ -60,8 +60,26 @@ lic::AssemblyLoader::~AssemblyLoader()
 {
 }
 
-lic::Assembly& lic::AssemblyLoader::LoadAssembly(const std::string& filepath)
+span<Assembly> lic::AssemblyLoader::Assemblies()
 {
+    // TODO: Refactor when multiple assemblies are supported
+    if (this->assemblies.empty())
+    {
+        return span<Assembly>();
+    }
+    else
+    {
+        return make_span(this->assemblies[0], 1);
+    }
+}
+
+lic::Assembly& lic::AssemblyLoader::LoadAssembly(const string& filepath)
+{
+    if (!this->assemblies.empty())
+    {
+        throw exception("Multiple assembly loading not supported");
+    }
+
     ifstream file(filepath, ios::binary | ios::ate);
     size_t fileSize = (size_t)file.tellg();
 

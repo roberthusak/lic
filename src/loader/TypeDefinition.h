@@ -20,8 +20,8 @@ public:
     const char* Namespace() const;
     const gsl::span<MethodDefinition> Methods();
 
-    size_t FirstMethodRid();
 private:
+    size_t FirstMethodRid();
 };
 
 }

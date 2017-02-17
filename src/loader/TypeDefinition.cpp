@@ -29,7 +29,7 @@ const char * lic::TypeDefinition::Namespace() const
 
 const span<MethodDefinition> lic::TypeDefinition::Methods()
 {
-    uint16_t firstMethodRid = this->FirstMethodRid();
+    size_t firstMethodRid = this->FirstMethodRid();
     if (firstMethodRid == 0)
     {
         return span<MethodDefinition>();
