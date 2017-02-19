@@ -31,6 +31,8 @@ private:
 
     Opcode ReadOpcode();
     LongOpcodeSuffix ReadOpcodeSuffix();
+    int8_t ReadInt8();
+    int32_t ReadInt32();
 
 	void LoadArg(size_t index);
 	void LoadLocal(size_t index);

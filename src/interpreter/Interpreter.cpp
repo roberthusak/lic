@@ -86,6 +86,8 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Ldarg_2:
 				this->LoadArg(2);
 				break;
+            case lic::Opcode::Ldarg_S:
+                this->LoadArg(this->ReadInt8());
 
             case lic::Opcode::Ldloc_0:
 				this->LoadLocal(0);
@@ -143,13 +145,16 @@ void lic::Interpreter::PerformEvaluationLoop()
 			case lic::Opcode::Ldc_I4_8:
 				this->LoadInt32Constant(8);
 				break;
-
 			case lic::Opcode::Ldc_I4_S:
+                this->LoadInt32Constant(this->ReadInt8());
+                break;
 			case lic::Opcode::Ldc_I4:
+                this->LoadInt32Constant(this->ReadInt32());
+                break;
+
 			case lic::Opcode::Ldc_I8:
 			case lic::Opcode::Ldc_R4:
 			case lic::Opcode::Ldc_R8:
-            case lic::Opcode::Ldarg_S:
             case lic::Opcode::Ldarga_S:
             case lic::Opcode::Starg_S:
             case lic::Opcode::Ldloc_S:
@@ -375,6 +380,26 @@ LongOpcodeSuffix lic::Interpreter::ReadOpcodeSuffix()
     LOG(this->log << OpcodeName(Opcode::LongOpcodePrefix, suffix) << ' ');
 
     return suffix;
+}
+
+int8_t lic::Interpreter::ReadInt8()
+{
+    int8_t val = *reinterpret_cast<const int8_t*>(this->ip);
+    this->ip += sizeof(int8_t);
+
+    LOG(this->log << (int32_t)val);
+
+    return val;
+}
+
+int32_t lic::Interpreter::ReadInt32()
+{
+    int32_t val = *reinterpret_cast<const int32_t*>(this->ip);
+    this->ip += sizeof(int32_t);
+
+    LOG(this->log << val);
+
+    return val;
 }
 
 void lic::Interpreter::LoadArg(size_t index)
