@@ -37,3 +37,8 @@ void lic::NumberType::PerformUnaryOp(Opcode op, gsl::byte * data) const
 void lic::NumberType::PerformBinaryOp(Opcode op, gsl::byte * leftData, RuntimeType * rightType, gsl::byte * rightData) const
 {
 }
+
+void lic::NumberType::StoreConstant(int32_t val, gsl::byte* data)
+{
+	*reinterpret_cast<int32_t*>(data) = val;
+}

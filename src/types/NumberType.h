@@ -16,6 +16,8 @@ public:
     virtual void PerformUnaryOp(Opcode op, gsl::byte* data) const;
     virtual void PerformBinaryOp(Opcode op, gsl::byte* leftData, RuntimeType* rightType, gsl::byte* rightData) const;
 
+	static void StoreConstant(int32_t val, gsl::byte* data);
+
     static NumberType& Instance();
 private:
     NumberType();

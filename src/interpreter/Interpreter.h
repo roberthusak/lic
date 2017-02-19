@@ -23,6 +23,7 @@ private:
 
     AssemblyLoader loader;
     std::vector<CallStackFrame> callStack;
+	CallStackFrame* frame;
     const gsl::byte* ip;
 
     void AddCall(MethodDefinition& method, gsl::span<TypedValue> args, Opcode* returnAddress);
@@ -30,6 +31,11 @@ private:
 
     Opcode ReadOpcode();
     LongOpcodeSuffix ReadOpcodeSuffix();
+
+	void LoadArg(size_t index);
+	void LoadLocal(size_t index);
+	void StoreLocal(size_t index);
+	void LoadInt32Constant(int32_t constant);
 };
 
 }

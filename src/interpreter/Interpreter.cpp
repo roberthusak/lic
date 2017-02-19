@@ -1,5 +1,7 @@
 #include "Interpreter.h"
 
+#include "types/NumberType.h"
+
 #define DEBUG
 
 // Simple conditional logging
@@ -18,7 +20,7 @@ using namespace gsl;
 using namespace lic;
 
 lic::Interpreter::Interpreter(const std::string& assembly, std::istream & in, std::ostream & out, std::ostream& log)
-    : in{ in }, out{ out }, log{ log }, ip{ nullptr }
+    : in{ in }, out{ out }, log{ log }, ip{ nullptr }, frame{ nullptr }
 {
     this->loader.LoadAssembly(assembly);
 }
@@ -59,6 +61,8 @@ void lic::Interpreter::AddCall(MethodDefinition& method, gsl::span<TypedValue> a
     {
         throw exception("Invalid header format");
     }
+
+	this->frame = &this->callStack.back();
 }
 
 void lic::Interpreter::PerformEvaluationLoop()
@@ -74,16 +78,77 @@ void lic::Interpreter::PerformEvaluationLoop()
                 break;
 
             case lic::Opcode::Ldarg_0:
+				this->LoadArg(0);
+				break;
             case lic::Opcode::Ldarg_1:
+				this->LoadArg(1);
+				break;
             case lic::Opcode::Ldarg_2:
+				this->LoadArg(2);
+				break;
+
             case lic::Opcode::Ldloc_0:
+				this->LoadLocal(0);
+				break;
             case lic::Opcode::Ldloc_1:
+				this->LoadLocal(1);
+				break;
             case lic::Opcode::Ldloc_2:
+				this->LoadLocal(2);
+				break;
             case lic::Opcode::Ldloc_3:
+				this->LoadLocal(3);
+				break;
+
             case lic::Opcode::Stloc_0:
+				this->StoreLocal(0);
+				break;
             case lic::Opcode::Stloc_1:
+				this->StoreLocal(0);
+				break;
             case lic::Opcode::Stloc_2:
+				this->StoreLocal(0);
+				break;
             case lic::Opcode::Stloc_3:
+				this->StoreLocal(0);
+				break;
+
+			case lic::Opcode::Ldc_I4_M1:
+				this->LoadInt32Constant(-1);
+				break;
+			case lic::Opcode::Ldc_I4_0:
+				this->LoadInt32Constant(0);
+				break;
+			case lic::Opcode::Ldc_I4_1:
+				this->LoadInt32Constant(1);
+				break;
+			case lic::Opcode::Ldc_I4_2:
+				this->LoadInt32Constant(2);
+				break;
+			case lic::Opcode::Ldc_I4_3:
+				this->LoadInt32Constant(3);
+				break;
+			case lic::Opcode::Ldc_I4_4:
+				this->LoadInt32Constant(4);
+				break;
+			case lic::Opcode::Ldc_I4_5:
+				this->LoadInt32Constant(5);
+				break;
+			case lic::Opcode::Ldc_I4_6:
+				this->LoadInt32Constant(6);
+				break;
+			case lic::Opcode::Ldc_I4_7:
+				this->LoadInt32Constant(7);
+				break;
+			case lic::Opcode::Ldc_I4_8:
+				this->LoadInt32Constant(8);
+				break;
+
+			case lic::Opcode::Ldc_I4_S:
+			case lic::Opcode::Ldc_I4:
+			case lic::Opcode::Ldc_I8:
+			case lic::Opcode::Ldc_R4:
+			case lic::Opcode::Ldc_R8:
             case lic::Opcode::Ldarg_S:
             case lic::Opcode::Ldarga_S:
             case lic::Opcode::Starg_S:
@@ -91,21 +156,6 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Ldloca_S:
             case lic::Opcode::Stloc_S:
             case lic::Opcode::Ldnull:
-            case lic::Opcode::Ldc_I4_M1:
-            case lic::Opcode::Ldc_I4_0:
-            case lic::Opcode::Ldc_I4_1:
-            case lic::Opcode::Ldc_I4_2:
-            case lic::Opcode::Ldc_I4_3:
-            case lic::Opcode::Ldc_I4_4:
-            case lic::Opcode::Ldc_I4_5:
-            case lic::Opcode::Ldc_I4_6:
-            case lic::Opcode::Ldc_I4_7:
-            case lic::Opcode::Ldc_I4_8:
-            case lic::Opcode::Ldc_I4_S:
-            case lic::Opcode::Ldc_I4:
-            case lic::Opcode::Ldc_I8:
-            case lic::Opcode::Ldc_R4:
-            case lic::Opcode::Ldc_R8:
             case lic::Opcode::Dup:
             case lic::Opcode::Pop:
             case lic::Opcode::Jmp:
@@ -302,8 +352,6 @@ void lic::Interpreter::PerformEvaluationLoop()
 
         LOG(this->log << endl);
     }
-
-
 }
 
 Opcode lic::Interpreter::ReadOpcode()
@@ -327,4 +375,30 @@ LongOpcodeSuffix lic::Interpreter::ReadOpcodeSuffix()
     LOG(this->log << OpcodeName(Opcode::LongOpcodePrefix, suffix) << ' ');
 
     return suffix;
+}
+
+void lic::Interpreter::LoadArg(size_t index)
+{
+	auto& arg = this->frame->Arg(index);
+	this->frame->Stack().Push(arg);
+}
+
+void lic::Interpreter::LoadLocal(size_t index)
+{
+	auto& local = this->frame->Local(index);
+	this->frame->Stack().Push(local);
+}
+
+void lic::Interpreter::StoreLocal(size_t index)
+{
+	this->frame->Local(index) = this->frame->Stack().Top();
+	this->frame->Stack().Pop();
+}
+
+void lic::Interpreter::LoadInt32Constant(int32_t constant)
+{
+	TypedValue val;
+	val.type = &NumberType::Instance();
+	NumberType::StoreConstant(constant, &val.data[0]);
+	this->frame->Stack().Push(val);
 }
