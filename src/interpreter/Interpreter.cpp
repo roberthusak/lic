@@ -152,6 +152,27 @@ void lic::Interpreter::PerformEvaluationLoop()
                 this->LoadInt32Constant(this->ReadInt32());
                 break;
 
+            // TODO: Implement more than Int32 arithmetic
+            case lic::Opcode::Add:
+            case lic::Opcode::Sub:
+            case lic::Opcode::Mul:
+            case lic::Opcode::Div:
+            case lic::Opcode::Div_Un:
+            case lic::Opcode::Rem:
+            case lic::Opcode::Rem_Un:
+            case lic::Opcode::And:
+            case lic::Opcode::Or:
+            case lic::Opcode::Xor:
+            case lic::Opcode::Shl:
+            case lic::Opcode::Shr:
+            case lic::Opcode::Shr_Un:
+                this->frame->Stack().PerformBinaryOp(op);
+                break;
+            case lic::Opcode::Neg:
+            case lic::Opcode::Not:
+                this->frame->Stack().PerformUnaryOp(op);
+                break;
+
 			case lic::Opcode::Ldc_I8:
 			case lic::Opcode::Ldc_R4:
 			case lic::Opcode::Ldc_R8:
@@ -212,21 +233,6 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Stind_I8:
             case lic::Opcode::Stind_R4:
             case lic::Opcode::Stind_R8:
-            case lic::Opcode::Add:
-            case lic::Opcode::Sub:
-            case lic::Opcode::Mul:
-            case lic::Opcode::Div:
-            case lic::Opcode::Div_Un:
-            case lic::Opcode::Rem:
-            case lic::Opcode::Rem_Un:
-            case lic::Opcode::And:
-            case lic::Opcode::Or:
-            case lic::Opcode::Xor:
-            case lic::Opcode::Shl:
-            case lic::Opcode::Shr:
-            case lic::Opcode::Shr_Un:
-            case lic::Opcode::Neg:
-            case lic::Opcode::Not:
             case lic::Opcode::Conv_I1:
             case lic::Opcode::Conv_I2:
             case lic::Opcode::Conv_I4:
