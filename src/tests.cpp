@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
         auto& assembly = interpreter.Assemblies()[0];
 
         // Find the tested type
+        cout << "Searching for the tested class.." << endl;
         auto types = assembly.Types();
         auto& type = *find_if(types.begin(), types.end(), [&typeName](auto& type) { return type.Name() == typeName; });
 

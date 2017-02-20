@@ -19,4 +19,4 @@ install:
   - cmake -DCMAKE_CXX_COMPILER=$COMPILER .. && make
   - cd ..
 script:
-  - ./build/src/tests ./samples/Basic/bin/Debug/netstandard1.6/Basic.dll
+  - ./build/src/tests /home/travis/samples/Basic/bin/Debug/netstandard1.6/Basic.dll
