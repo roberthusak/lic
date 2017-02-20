@@ -50,6 +50,10 @@ void lic::Interpreter::Run(MethodDefinition& method)
     {
         LOG(this->log << endl << "No value returned" << endl);
     }
+
+    this->callStack.clear();
+    this->frame = nullptr;
+    this->ip = nullptr;
 }
 
 void lic::Interpreter::AddCall(MethodDefinition& method, gsl::span<TypedValue> args, Opcode* returnAddress)
