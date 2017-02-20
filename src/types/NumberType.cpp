@@ -49,7 +49,7 @@ void lic::NumberType::PerformBinaryOp(Opcode op, gsl::byte * leftData, RuntimeTy
 {
     if (rightType != this)
     {
-        throw exception("Incompatible types");
+        throw runtime_error("Incompatible types");
     }
 
     int32_t& left = *reinterpret_cast<int32_t*>(leftData);

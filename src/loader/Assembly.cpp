@@ -15,7 +15,7 @@ byte* ProcessStreamHeader(byte* start, byte* metadataHeaderPos, span<byte>& stre
 
     if (strcmp(name, streamName) != 0)
     {
-        throw exception("Invalid CLI stream name");
+        throw runtime_error("Invalid CLI stream name");
     }
 
     streamSpan = make_span(metadataHeaderPos + offset, size);
@@ -45,12 +45,12 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
     byte* metadataStreamHeaderPos = &*this->metadataStream.begin();
     if (metadataStreamHeaderPos != streamHeaderPos)
     {
-        throw exception("Error in parsing stream headers");
+        throw runtime_error("Error in parsing stream headers");
     }
 
     if (metadataStreamHeaderPos[CLI_METADATA_STREAM_HEADER_HEAP_SIZES_OFFSET] != (byte)0)
     {
-        throw exception("Streams indexed by 4 bytes not supported");
+        throw runtime_error("Streams indexed by 4 bytes not supported");
     }
 
     // Assume the 2 byte variant for each key (if there are too many records, an error will be raised later)
@@ -67,15 +67,15 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
 
             if (this->metadataRowCounts[i] > CLI_RID_SIZE_TRESHOLD)
             {
-                throw exception("Tables indexed by 4 bytes not supported");
+                throw runtime_error("Tables indexed by 4 bytes not supported");
             }
             else if (this->metadataRowCounts[i] == 0)
             {
-                throw exception("Invalid zero size of table");
+                throw runtime_error("Invalid zero size of table");
             }
             else if (this->metadataRowSizes[i] == 0)
             {
-                throw exception("Existing records in undefined table");
+                throw runtime_error("Existing records in undefined table");
             }
         }
         else
@@ -105,7 +105,7 @@ lic::Assembly::Assembly(size_t baseRva, unique_ptr<byte[]>&& data)
     // FIXME
     //if (currentTablePos != &*this->metadataStream.begin() + this->metadataStream.length())
     //{
-    //    throw exception("Error in processing metadata tables");
+    //    throw runtime_error("Error in processing metadata tables");
     //}
 }
 

@@ -76,7 +76,7 @@ void lic::Interpreter::AddCall(MethodDefinition& method, gsl::span<TypedValue> a
     }
     else
     {
-        throw exception("Invalid header format");
+        throw runtime_error("Invalid header format");
     }
 
 	this->frame = &this->callStack.back();
@@ -376,7 +376,7 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Leave_S:
             case lic::Opcode::Stind_I:
             case lic::Opcode::Conv_U:
-                throw exception("Operation not implemented");
+                throw runtime_error("Operation not implemented");
 
             case lic::Opcode::LongOpcodePrefix:
             {
@@ -417,14 +417,14 @@ void lic::Interpreter::PerformEvaluationLoop()
                     case lic::LongOpcodeSuffix::Refanytype:
                     case lic::LongOpcodeSuffix::InvalidOpcode:
                     default:
-                        throw exception("Operation not implemented");
+                        throw runtime_error("Operation not implemented");
                 }
 
                 break;
             }
 
             default:
-                throw exception("Operation not implemented");
+                throw runtime_error("Operation not implemented");
         }
 
         LOG(this->log << endl);

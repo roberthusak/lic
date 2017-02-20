@@ -77,7 +77,7 @@ lic::Assembly& lic::AssemblyLoader::LoadAssembly(const string& filepath)
 {
     if (!this->assemblies.empty())
     {
-        throw exception("Multiple assembly loading not supported");
+        throw runtime_error("Multiple assembly loading not supported");
     }
 
     ifstream file(filepath, ios::binary | ios::ate);
