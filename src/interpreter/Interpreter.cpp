@@ -114,6 +114,9 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Ldloc_3:
 				this->LoadLocal(3);
 				break;
+            case lic::Opcode::Ldloc_S:
+                this->LoadLocal(this->ReadInt8());
+                break;
 
             case lic::Opcode::Stloc_0:
 				this->StoreLocal(0);
@@ -127,6 +130,9 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Stloc_3:
 				this->StoreLocal(3);
 				break;
+            case lic::Opcode::Stloc_S:
+                this->StoreLocal(this->ReadInt8());
+                break;
 
 			case lic::Opcode::Ldc_I4_M1:
 				this->LoadInt32Constant(-1);
@@ -206,9 +212,7 @@ void lic::Interpreter::PerformEvaluationLoop()
 			case lic::Opcode::Ldc_R8:
             case lic::Opcode::Ldarga_S:
             case lic::Opcode::Starg_S:
-            case lic::Opcode::Ldloc_S:
             case lic::Opcode::Ldloca_S:
-            case lic::Opcode::Stloc_S:
             case lic::Opcode::Ldnull:
             case lic::Opcode::Dup:
             case lic::Opcode::Pop:
@@ -351,11 +355,18 @@ void lic::Interpreter::PerformEvaluationLoop()
                 auto suffix = this->ReadOpcodeSuffix();
                 switch (suffix)
                 {
-                    case lic::LongOpcodeSuffix::Arglist:
                     case lic::LongOpcodeSuffix::Ceq:
+                        this->PushBool(this->PopCompareInt32([](auto a, auto b) { return a == b; }));
+                        break;
                     case lic::LongOpcodeSuffix::Cgt:
-                    case lic::LongOpcodeSuffix::Cgt_Un:
+                        this->PushBool(this->PopCompareInt32([](auto a, auto b) { return a > b; }));
+                        break;
                     case lic::LongOpcodeSuffix::Clt:
+                        this->PushBool(this->PopCompareInt32([](auto a, auto b) { return a < b; }));
+                        break;
+
+                    case lic::LongOpcodeSuffix::Arglist:
+                    case lic::LongOpcodeSuffix::Cgt_Un:
                     case lic::LongOpcodeSuffix::Clt_Un:
                     case lic::LongOpcodeSuffix::Ldftn:
                     case lic::LongOpcodeSuffix::Ldvirtftn:
@@ -380,6 +391,8 @@ void lic::Interpreter::PerformEvaluationLoop()
                     default:
                         throw exception("Operation not implemented");
                 }
+
+                break;
             }
 
             default:
@@ -457,6 +470,29 @@ void lic::Interpreter::LoadInt32Constant(int32_t constant)
 	val.type = &NumberType::Instance();
 	NumberType::StoreConstant(constant, &val.data[0]);
 	this->frame->Stack().Push(val);
+}
+
+bool lic::Interpreter::PopCompareInt32(std::function<bool(int32_t, int32_t)> op)
+{
+    int32_t right = *reinterpret_cast<int32_t*>(&this->frame->Stack().Top().data[0]);
+    this->frame->Stack().Pop();
+    
+    int32_t left = *reinterpret_cast<int32_t*>(&this->frame->Stack().Top().data[0]);
+    this->frame->Stack().Pop();
+
+    return op(left, right);
+}
+
+void lic::Interpreter::PushBool(bool value)
+{
+    if (value)
+    {
+        this->LoadInt32Constant(1);
+    }
+    else
+    {
+        this->LoadInt32Constant(0);
+    }
 }
 
 void lic::Interpreter::Branch(bool conditionResult, int32_t offset)

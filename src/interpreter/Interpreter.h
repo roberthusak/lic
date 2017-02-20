@@ -38,6 +38,9 @@ private:
 	void LoadLocal(size_t index);
 	void StoreLocal(size_t index);
 	void LoadInt32Constant(int32_t constant);
+
+    bool PopCompareInt32(std::function<bool(int32_t, int32_t)> op);
+    void PushBool(bool value);
     void Branch(bool conditionResult, int32_t offset);
 };
 
