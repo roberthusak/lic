@@ -40,8 +40,7 @@ int main(int argc, char* argv[])
 {
     try
     {
-        // TODO: Allow to pass as arguments
-        string assemblyPath = "C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.6\\Basic.dll";
+        string assemblyPath = argv[1];
         string typeName = "Fibonacci";
 
         stringstream output, ignored;

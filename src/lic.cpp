@@ -10,15 +10,15 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		// TODO: Allow to pass as arguments
-		string assemblyPath = "C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.6\\Basic.dll";
-		string typeName = "Fibonacci";
-		string methodName = "Fib_10";
+        string assemblyPath = argv[1];
+        string typeName = argv[2];
+        string methodName = argv[3];
 
 		Interpreter interpreter(assemblyPath, cin, cout, cerr);
 		auto& assembly = interpreter.Assemblies()[0];
 
 		// Dump the contents of the assembly
+        cout << "Assembly contents:" << endl;
 		for (auto& type : assembly.Types())
 		{
 			cout << type.Namespace() << '.' << type.Name() << endl;
