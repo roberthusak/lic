@@ -1,7 +1,6 @@
 include_directories(.)
 
 set(LIC_SOURCES
-    lic.cpp
 	format/ClrMetadataFormat.cpp
 	format/Opcodes.cpp
 	interpreter/CallStackFrame.cpp
@@ -16,4 +15,10 @@ set(LIC_SOURCES
 	types/RuntimeType.cpp
 )
 
-add_executable(lic ${LIC_SOURCES})
+add_library(licl ${LIC_SOURCES})
+
+add_executable(lic lic.cpp)
+target_link_libraries(lic licl)
+
+add_executable(tests tests.cpp)
+target_link_libraries(tests licl)
