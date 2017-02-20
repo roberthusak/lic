@@ -38,6 +38,7 @@ private:
 	void LoadLocal(size_t index);
 	void StoreLocal(size_t index);
 	void LoadInt32Constant(int32_t constant);
+    void Branch(bool conditionResult, int32_t offset);
 };
 
 }

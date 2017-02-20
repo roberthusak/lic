@@ -152,6 +152,10 @@ void lic::Interpreter::PerformEvaluationLoop()
                 this->LoadInt32Constant(this->ReadInt32());
                 break;
 
+            case lic::Opcode::Br_S:
+                this->Branch(true, this->ReadInt8());
+                break;
+
             // TODO: Implement more than Int32 arithmetic
             case lic::Opcode::Add:
             case lic::Opcode::Sub:
@@ -188,7 +192,6 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Call:
             case lic::Opcode::Calli:
             case lic::Opcode::Ret:
-            case lic::Opcode::Br_S:
             case lic::Opcode::Brfalse_S:
             case lic::Opcode::Brtrue_S:
             case lic::Opcode::Beq_S:
@@ -432,4 +435,12 @@ void lic::Interpreter::LoadInt32Constant(int32_t constant)
 	val.type = &NumberType::Instance();
 	NumberType::StoreConstant(constant, &val.data[0]);
 	this->frame->Stack().Push(val);
+}
+
+void lic::Interpreter::Branch(bool conditionResult, int32_t offset)
+{
+    if (conditionResult)
+    {
+        this->ip += offset;
+    }
 }
