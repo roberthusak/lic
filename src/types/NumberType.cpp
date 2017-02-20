@@ -47,6 +47,11 @@ void lic::NumberType::PerformUnaryOp(Opcode op, gsl::byte* data) const
 
 void lic::NumberType::PerformBinaryOp(Opcode op, gsl::byte * leftData, RuntimeType* rightType, gsl::byte * rightData) const
 {
+    if (rightType != this)
+    {
+        throw exception("Incompatible types");
+    }
+
     int32_t& left = *reinterpret_cast<int32_t*>(leftData);
     int32_t& right = *reinterpret_cast<int32_t*>(rightData);
 

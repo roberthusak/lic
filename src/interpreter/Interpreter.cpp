@@ -41,14 +41,14 @@ void lic::Interpreter::Run(MethodDefinition& method)
     // Print the return value, if any
     if (this->frame->Stack().Size() > 0)
     {
-        LOG(this->log << "Value returned" << endl);
+        LOG(this->log << endl << "Value returned" << endl);
 
         auto& val = this->frame->Stack().Top();
         this->out << val.type->ToString(&val.data[0]) << endl;
     }
     else
     {
-        LOG(this->log << "No value returned" << endl);
+        LOG(this->log << endl << "No value returned" << endl);
     }
 }
 
@@ -119,13 +119,13 @@ void lic::Interpreter::PerformEvaluationLoop()
 				this->StoreLocal(0);
 				break;
             case lic::Opcode::Stloc_1:
-				this->StoreLocal(0);
+				this->StoreLocal(1);
 				break;
             case lic::Opcode::Stloc_2:
-				this->StoreLocal(0);
+				this->StoreLocal(2);
 				break;
             case lic::Opcode::Stloc_3:
-				this->StoreLocal(0);
+				this->StoreLocal(3);
 				break;
 
 			case lic::Opcode::Ldc_I4_M1:
