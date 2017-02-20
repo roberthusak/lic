@@ -2,6 +2,11 @@
 
 using namespace lic;
 
+size_t lic::EvaluationStack::Size() const
+{
+    return this->stack.size();
+}
+
 void lic::EvaluationStack::Push(TypedValue value)
 {
     this->stack.push_back(value);

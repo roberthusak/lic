@@ -19,6 +19,7 @@ struct TypedValue
 class EvaluationStack
 {
 public:
+    size_t Size() const;
     void Push(TypedValue value);
     TypedValue Pop();
     TypedValue& Top();

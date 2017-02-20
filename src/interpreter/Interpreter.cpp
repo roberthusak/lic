@@ -37,6 +37,19 @@ void lic::Interpreter::Run(MethodDefinition& method)
 
     this->AddCall(method, span<TypedValue>(), nullptr);
     this->PerformEvaluationLoop();
+
+    // Print the return value, if any
+    if (this->frame->Stack().Size() > 0)
+    {
+        LOG(this->log << "Value returned" << endl);
+
+        auto& val = this->frame->Stack().Top();
+        this->out << val.type->ToString(&val.data[0]) << endl;
+    }
+    else
+    {
+        LOG(this->log << "No value returned" << endl);
+    }
 }
 
 void lic::Interpreter::AddCall(MethodDefinition& method, gsl::span<TypedValue> args, Opcode* returnAddress)
@@ -152,8 +165,19 @@ void lic::Interpreter::PerformEvaluationLoop()
                 this->LoadInt32Constant(this->ReadInt32());
                 break;
 
+            // TODO: Implement properly when method calls are supported
+            case lic::Opcode::Ret:
+                if (this->callStack.size() == 1)
+                {
+                    LOG(this->log << endl);
+                    return;
+                }
+
             case lic::Opcode::Br_S:
                 this->Branch(true, this->ReadInt8());
+                break;
+            case lic::Opcode::Br:
+                this->Branch(true, this->ReadInt32());
                 break;
 
             // TODO: Implement more than Int32 arithmetic
@@ -191,7 +215,6 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Jmp:
             case lic::Opcode::Call:
             case lic::Opcode::Calli:
-            case lic::Opcode::Ret:
             case lic::Opcode::Brfalse_S:
             case lic::Opcode::Brtrue_S:
             case lic::Opcode::Beq_S:
@@ -204,7 +227,6 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Bgt_Un_S:
             case lic::Opcode::Ble_Un_S:
             case lic::Opcode::Blt_Un_S:
-            case lic::Opcode::Br:
             case lic::Opcode::Brfalse:
             case lic::Opcode::Brtrue:
             case lic::Opcode::Beq:
