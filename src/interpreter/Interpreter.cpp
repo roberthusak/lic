@@ -182,6 +182,37 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Br_S:
                 this->Branch(true, this->ReadInt8());
                 break;
+            case lic::Opcode::Brfalse_S:
+                this->Branch(!this->PopBool(), this->ReadInt8());
+                break;
+            case lic::Opcode::Brtrue_S:
+                this->Branch(this->PopBool(), this->ReadInt8());
+                break;
+            case lic::Opcode::Beq_S:
+                this->Branch(
+                    this->PopCompareInt32([](auto a, auto b) { return a == b; }),
+                    this->ReadInt8());
+                break;
+            case lic::Opcode::Bge_S:
+                this->Branch(
+                    this->PopCompareInt32([](auto a, auto b) { return a >= b; }),
+                    this->ReadInt8());
+                break;
+            case lic::Opcode::Bgt_S:
+                this->Branch(
+                    this->PopCompareInt32([](auto a, auto b) { return a > b; }),
+                    this->ReadInt8());
+                break;
+            case lic::Opcode::Ble_S:
+                this->Branch(
+                    this->PopCompareInt32([](auto a, auto b) { return a <= b; }),
+                    this->ReadInt8());
+                break;
+            case lic::Opcode::Blt_S:
+                this->Branch(
+                    this->PopCompareInt32([](auto a, auto b) { return a < b; }),
+                    this->ReadInt8());
+                break;
             case lic::Opcode::Br:
                 this->Branch(true, this->ReadInt32());
                 break;
@@ -219,13 +250,6 @@ void lic::Interpreter::PerformEvaluationLoop()
             case lic::Opcode::Jmp:
             case lic::Opcode::Call:
             case lic::Opcode::Calli:
-            case lic::Opcode::Brfalse_S:
-            case lic::Opcode::Brtrue_S:
-            case lic::Opcode::Beq_S:
-            case lic::Opcode::Bge_S:
-            case lic::Opcode::Bgt_S:
-            case lic::Opcode::Ble_S:
-            case lic::Opcode::Blt_S:
             case lic::Opcode::Bne_Un_S:
             case lic::Opcode::Bge_Un_S:
             case lic::Opcode::Bgt_Un_S:
@@ -481,6 +505,23 @@ bool lic::Interpreter::PopCompareInt32(std::function<bool(int32_t, int32_t)> op)
     this->frame->Stack().Pop();
 
     return op(left, right);
+}
+
+bool lic::Interpreter::PopBool()
+{
+    bool val;
+    if (*reinterpret_cast<int32_t*>(&this->frame->Stack().Top().data[0]) == 0)
+    {
+        val = false;
+    }
+    else
+    {
+        val = true;
+    }
+
+    this->frame->Stack().Pop();
+
+    return val;
 }
 
 void lic::Interpreter::PushBool(bool value)

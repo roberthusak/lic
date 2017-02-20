@@ -40,6 +40,7 @@ private:
 	void LoadInt32Constant(int32_t constant);
 
     bool PopCompareInt32(std::function<bool(int32_t, int32_t)> op);
+    bool PopBool();
     void PushBool(bool value);
     void Branch(bool conditionResult, int32_t offset);
 };
