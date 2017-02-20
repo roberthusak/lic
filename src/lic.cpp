@@ -11,9 +11,9 @@ int main(int argc, char* argv[])
 	try
 	{
 		// TODO: Allow to pass as arguments
-		string assemblyPath = "C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.4\\Basic.dll";
-		string typeName = "Arithmetic";
-		string methodName = "AddSimple";
+		string assemblyPath = "C:\\Users\\husak\\OneDrive\\skola\\fit\\run\\lic\\samples\\Basic\\bin\\Debug\\netstandard1.6\\Basic.dll";
+		string typeName = "Fibonacci";
+		string methodName = "Fib_10";
 
 		Interpreter interpreter(assemblyPath, cin, cout, cerr);
 		auto& assembly = interpreter.Assemblies()[0];
@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 	}
 	catch (exception& e)
 	{
-		cout << "Error: " << e.what() << endl;
+		cerr << "Error: " << e.what() << endl;
 		return 1;
 	}
 
